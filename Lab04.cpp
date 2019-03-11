@@ -1,181 +1,78 @@
 // Yun Chi Leong
 // COSC 2030-01 Spring 2019
 // 11 March 2019
-// Binary Tree
 
-#include <iostream>
-
+#include <iostream> 
+#include <queue> 
 using namespace std;
 
-
+/* A binary tree node has key, pointer to left child
+and a pointer to right child */
 struct Node {
-	int value;
-	Node *left;
-	Node *right;
+	int key;
+	struct Node* left, *right;
 };
 
-class bintree {
-public:
-	bintree();
-	~bintree();
-
-	void insert(int key);
-	Node *search(int key);
-	void destroy_tree();
-	void inorder_print();
-	void postorder_print();
-	void preorder_print();
-
-private:
-	void destroy_tree(Node *leaf);
-	void insert(int key, Node *leaf);
-	Node *search(int key, Node *leaf);
-	void inorder_print(Node *leaf);
-	void postorder_print(Node *leaf);
-	void preorder_print(Node *leaf);
-
-	Node *root;
+/* function to create a new node of tree and r
+eturns pointer */
+struct Node* newNode(int key)
+{
+	struct Node* temp = new Node;
+	temp->key = key;
+	temp->left = temp->right = NULL;
+	return temp;
 };
 
-
-bintree::bintree() {
-	root = NULL;
+// Inorder traversal of a binary tree
+void inorder(struct Node* temp)
+{
+	if (!temp)
+		return;
+	inorder(temp->left);
+	cout << temp->key << " ";
+	inorder(temp->right);
+}
+// Preorder traversal of binary tree
+void preorder(struct Node* temp)
+{
+	if (!temp)
+		return;
+	cout << temp->key << " ";
+	preorder(temp->left);
+	preorder(temp->right);
+}
+// Postorder traversal of a binary tree
+void postorder(struct Node* temp)
+{
+	if (!temp)
+		return;
+	preorder(temp->left);
+	preorder(temp->right);
+	cout << temp->key << " ";
 }
 
-bintree::~bintree() {
-	destroy_tree();
-}
+// Driver code 
+int main()
+{
+	struct Node* root = newNode(5);
+	root->left = newNode(4);
+	root->left->left = newNode(10);
+	root->left->left->right = newNode(15);
+	root->left->left->right->left = newNode(8);
+	root->right = newNode(1);
+	root->right->right = newNode(7);
+	root->right->right-> right= newNode(9);
 
-void bintree::destroy_tree(Node *leaf) {
-	if (leaf != NULL) {
-		destroy_tree(leaf->left);
-		destroy_tree(leaf->right);
-		delete leaf;
-	}
-}
 
-void bintree::insert(int key, Node *leaf) {
-
-	if (key < leaf->value) {
-		if (leaf->left != NULL) {
-			insert(key, leaf->left);
-		}
-		else {
-			leaf->left = new Node;
-			leaf->left->value = key;
-			leaf->left->left = NULL;
-			leaf->left->right = NULL;
-		}
-	}
-	else if (key >= leaf->value) {
-		if (leaf->right != NULL) {
-			insert(key, leaf->right);
-		}
-		else {
-			leaf->right = new Node;
-			leaf->right->value = key;
-			leaf->right->right = NULL;
-			leaf->right->left = NULL;
-		}
-	}
-
-}
-
-void bintree::insert(int key) {
-	if (root != NULL) {
-		insert(key, root);
-	}
-	else {
-		root = new Node;
-		root->value = key;
-		root->left = NULL;
-		root->right = NULL;
-	}
-}
-
-Node *bintree::search(int key, Node *leaf) {
-	if (leaf != NULL) {
-		if (key == leaf->value) {
-			return leaf;
-		}
-		if (key < leaf->value) {
-			return search(key, leaf->left);
-		}
-		else {
-			return search(key, leaf->right);
-		}
-	}
-	else {
-		return NULL;
-	}
-}
-
-Node *bintree::search(int key) {
-	return search(key, root);
-}
-
-void bintree::destroy_tree() {
-	destroy_tree(root);
-}
-
-void bintree::inorder_print() {
-	inorder_print(root);
-	cout << "\n";
-}
-
-void bintree::inorder_print(Node *leaf) {
-	if (leaf != NULL) {
-		inorder_print(leaf->left);
-		cout << leaf->value << ",";
-		inorder_print(leaf->right);
-	}
-}
-
-void bintree::postorder_print() {
-	postorder_print(root);
-	cout << "\n";
-}
-
-void bintree::postorder_print(Node *leaf) {
-	if (leaf != NULL) {
-		inorder_print(leaf->left);
-		inorder_print(leaf->right);
-		cout << leaf->value << ",";
-	}
-}
-
-void bintree::preorder_print() {
-	preorder_print(root);
-	cout << "\n";
-}
-
-void bintree::preorder_print(Node *leaf) {
-	if (leaf != NULL) {
-		cout << leaf->value << ",";
-		inorder_print(leaf->left);
-		inorder_print(leaf->right);
-	}
-}
-
-int main() {
-
-	//bintree tree;
-	bintree *tree = new bintree();
-
-	tree->insert(8);
-	tree->insert(15);
-	tree->insert(10);
-	tree->insert(4);
-	tree->insert(5);
-	tree->insert(1);
-	tree->insert(7);
-	tree->insert(9);
-
-	tree->preorder_print();
-	tree->inorder_print();
-	tree->postorder_print();
-
-	delete tree;
+	cout << "Inorder traversal : ";
+	inorder(root);
+	cout << endl;
+	cout << "Preorder traversal : ";
+	preorder(root);
+	cout << endl;
+	cout << "Postorder traversal : ";
+	postorder(root);
+	cout << endl;
 	system("pause");
 	return 0;
 }
